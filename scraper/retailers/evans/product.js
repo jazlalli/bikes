@@ -3,7 +3,6 @@ var cheerio = require('cheerio');
 module.exports = scrape;
 
 function scrape(responseBody, callback) {
-  var product = {};
   var $ = cheerio.load(responseBody),
       name = $('h1.product-title').html(),
       price = $.html('meta[itemprop="lowPrice"]'),
@@ -18,8 +17,10 @@ function scrape(responseBody, callback) {
     }
   });
 
+  console.log(name.replace(/\s+/g, ' '));
+
   var product = {
-    name: decodeURI(name.trim()),
+    name: decodeURI(name.replace(/\s+/g, ' ')),
     category: decodeURI(category) || '',
     price: '£' + decodeURI($(price).attr('content')),
     description: decodeURI(description),

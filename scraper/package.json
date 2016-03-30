@@ -4,7 +4,9 @@
   "description": "Scraper to gather bike data and assets",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "harvest": "node index.js --harvest",
+    "hydrate": "node index.js --hydrate"
   },
   "keywords": [
     "scraper"

@@ -7,18 +7,16 @@ function scrape(responseBody, callback) {
   var $ = cheerio.load(responseBody),
       name = $('h1').html(),
       price = $('span.ProductPrice.VariationProductPrice').html(),
-      description = $('div.ProductDescriptionContainer.prodAccordionContent').html(),
+      description = $('div.ProductDescriptionContainer.prodAccordionContent div p').text(),
       image = $('div.zoomie img').attr('src');
 
   var product = {
     name: decodeURI(name.trim()),
     price: '£' + price,
-    description: description,
-    retailer: 'evans',
+    description: decodeURI(description),
+    retailer: 'buy-a-bike',
     image: decodeURI($(image).attr('src')) || ''
   };
-
-  console.log(product);
 
   callback(null, product);
 }

@@ -1,4 +1,22 @@
 {
+  "chain-reaction": [
+    "http://www.chainreactioncycles.com/road-bikes",
+    "http://www.chainreactioncycles.com/road-bikes?page=2",
+    "http://www.chainreactioncycles.com/road-bikes?page=3",
+    "http://www.chainreactioncycles.com/mountain-bikes/full-suspension",
+    "http://www.chainreactioncycles.com/mountain-bikes/full-suspension?page=2",
+    "http://www.chainreactioncycles.com/mountain-bikes/full-suspension?page=3",
+    "http://www.chainreactioncycles.com/mountain-bikes/full-suspension?page=4",
+    "http://www.chainreactioncycles.com/mountain-bikes/hardtail",
+    "http://www.chainreactioncycles.com/mountain-bikes/hardtail?page=2",
+    "http://www.chainreactioncycles.com/mountain-bikes/hardtail?page=3",
+    "http://www.chainreactioncycles.com/mountain-bikes/hardtail?page=4",
+    "http://www.chainreactioncycles.com/hybrid-city-bikes",
+    "http://www.chainreactioncycles.com/hybrid-city-bikes?page=2",
+    "http://www.chainreactioncycles.com/hybrid-city-bikes?page=3",
+    "http://www.chainreactioncycles.com/hybrid-city-bikes?page=4",
+    "http://www.chainreactioncycles.com/cyclo-cross-bikes"
+  ],
   "buy-a-bike": [
     "http://www.buyabike.co.uk/all-bikes/?sort=alphaasc",
     "http://www.buyabike.co.uk/all-bikes/?sort=alphaasc&page=2",

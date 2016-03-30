@@ -1,5 +1,4 @@
-var cheerio = require('cheerio'),
-    async = require('async'),
+var async = require('async'),
     request = require('request'),
     retailers = require('./retailers');
 

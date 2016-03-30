@@ -1,12 +1,11 @@
-var fs = require('fs'),
+var async = require('async'),
     request = require('request'),
     retailers = require('./retailers'),
     mongoose = require('mongoose');
 
 var endpoint = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/bikes';
 var db = mongoose.connection;
-
-// mongoose.connect(endpoint);
+mongoose.connect(endpoint);
 
 var bikeSchema = new mongoose.Schema({
   'name': String,
@@ -20,33 +19,43 @@ var bikeSchema = new mongoose.Schema({
 
 var Bike = mongoose.model('Bike', bikeSchema);
 
-fs.readFile('products.csv', function (err, contents) {
-  if (err) {
-    return console.log(err);
-  }
+var CONCURRENCY = 3;
 
-  var products = contents.toString().split('\n');
-  products.forEach(function (product) {
-    if (!product) return false;
+var q = async.queue(function (task, cb) {
+  var scrapeRetailer = retailers[task.retailer].scrape;
 
-    var p = product.split(',');
-    var retailer = p[0],
-        productName = p[1],
-        url = p[2];
+  request(task.url, function (error, res, body) {
+    if (!error) {
+      scrapeRetailer(body, function (err, product) {
+        if (!err) {
+          product.link = task.url;
+          var query = {link: task.url};
 
-    var scrape = retailers[retailer].scrape;
-
-    request(url, function (err, res, body) {
-      if (!err) {
-        scrape(body, function (err, productData) {
-          if (!err) {
-            productData.link = url;
-
-            var bike = new Bike(productData);
-            // console.log(bike);
-          }
-        })
-      }
-    });
+          Bike.findOneAndUpdate(query, product, {upsert:true}, function (err, doc) {
+            console.log('saved', product.name, 'from', product.retailer);
+            return cb();
+          });
+        }
+      });
+    }
   });
-});
+
+}, CONCURRENCY);
+
+module.exports = scrape;
+
+function scrape(target, callback) {
+  var p = target.split(',');
+  var task = {
+    retailer: p[0],
+    product: p[1],
+    url: p[2]
+  };
+
+  q.drain(function () {
+    return callback();
+  });
+
+  q.push(task);
+}
+

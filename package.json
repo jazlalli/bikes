@@ -12,5 +12,10 @@
     "compare"
   ],
   "author": "Jaz Lalli",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "express": "^4.13.4",
+    "serve-static": "^1.10.2"
+  }
 }
