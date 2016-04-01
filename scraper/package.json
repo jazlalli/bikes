@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "harvest": "node index.js --harvest",
-    "hydrate": "node index.js --hydrate"
+    "crawl": "node index.js --crawl",
+    "scrape": "node index.js --scrape"
   },
   "keywords": [
     "scraper"
@@ -16,7 +16,6 @@
   "dependencies": {
     "async": "~2.0.0-rc.2",
     "cheerio": "~0.20.0",
-    "mongoose": "~4.4.9",
     "request": "~2.69.0"
   }
 }

@@ -6,12 +6,12 @@ var retailers = {};
 var items = fs.readdirSync(__dirname);
 items.forEach(function (item) {
   if (item !== excluded) {
-    var getLinks = require(__dirname + '/' + item + '/links');
-    var scrapePage = require(__dirname + '/' + item + '/product');
+    var crawl = require(__dirname + '/' + item + '/crawl');
+    var scrape = require(__dirname + '/' + item + '/scrape');
 
     retailers[item] = {
-      getLinks: getLinks,
-      scrape: scrapePage
+      crawl: crawl,
+      scrape: scrape
     };
   }
 });

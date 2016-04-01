@@ -17,13 +17,11 @@ function scrape(responseBody, callback) {
     }
   });
 
-  console.log(name.replace(/\s+/g, ' '));
-
   var product = {
-    name: decodeURI(name.replace(/\s+/g, ' ')),
-    category: decodeURI(category) || '',
-    price: '£' + decodeURI($(price).attr('content')),
-    description: decodeURI(description),
+    name: name.replace(/\s+/g, ' '),
+    category: category || '',
+    price: '£' + $(price).attr('content'),
+    description: description,
     retailer: 'evans',
     image: decodeURI($(image).attr('src')) || ''
   };

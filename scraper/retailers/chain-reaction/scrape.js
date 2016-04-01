@@ -20,9 +20,9 @@ function scrape(responseBody, callback) {
 
   var product = {
     name: $(name).attr('content'),
-    category: decodeURI(category) || '',
-    price: '£' + decodeURI(price),
-    description: decodeURI(description),
+    category: category || '',
+    price: '£' + price,
+    description: description,
     retailer: 'chain-reaction',
     image: decodeURI(image) || ''
   };

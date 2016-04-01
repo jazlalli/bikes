@@ -1,24 +1,23 @@
 var fs = require('fs');
-var crawl = require('./crawler');
-var scrape = require('./scraper');
 var sites = require('./targets.json');
 
 var arg = process.argv.slice(process.argv.length - 1)[0];
 arg = arg.replace(/^(-)+/, '');
 
-if (arg === 'harvest') {
-  return harvest();
+if (arg === 'crawl') {
+  return harvestLinks();
 }
 
-if (arg === 'hydrate') {
-  return hydrate();
+if (arg === 'scrape') {
+  return scrapeContent();
 }
 
-function harvest() {
+function harvestLinks() {
+  var crawl = require('./crawler');
+
   var targets = [];
   var sources = Object.keys(sites);
   var productFile = 'products.csv';
-  fs.writeFileSync(productFile, '', 'utf8');
 
   for (var i = 0, len = sources.length; i < len; i++) {
     var retailer = sources[i];
@@ -32,34 +31,36 @@ function harvest() {
     targets = targets.concat(urls);
   }
 
-  targets.forEach(function (target) {
-    crawl(target, function (err, data) {
-      if (!err) {
-        data.map(function (item) {
-          var line = [item.retailer, item.name, item.url].join(',') + '\n';
-          fs.appendFileSync(productFile, line, 'utf8');
-        })
-      }
-    });
+  crawl(targets, function (err, results) {
+    if (!err) {
+      var csv = results.map(item => {
+        var row = [item.retailer.trim(), item.name.trim(), item.url].join(',');
+        return row + '\n';
+      });
+
+      fs.writeFile(productFile, csv.join(''), 'utf8', err => {
+        if (!err) {
+          console.log('done crawling!');
+        }
+      });
+    }
   });
 }
 
 
-function hydrate() {
+function scrapeContent() {
+  var scrape = require('./scraper');
+
   fs.readFile('products.csv', function (err, contents) {
     if (err) {
       return console.log(err);
     }
 
     var products = contents.toString().split('\n');
-    products.forEach(function (product) {
-      if (!product) return false;
-
-      scrape(product, function (err) {
-        if (!err) {
-          return console.log('ALL DONE!');
-        }
-      });
+    scrape(products, function (err) {
+      if (!err) {
+        return console.log('done scraping!');
+      }
     });
   });
 }

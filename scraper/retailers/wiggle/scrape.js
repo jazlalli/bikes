@@ -20,10 +20,10 @@ function scrape(responseBody, callback) {
   });
 
   var product = {
-    name: decodeURI(name.trim()),
+    name: name.trim(),
     category: category,
     price: price,
-    description: decodeURI(description),
+    description: description,
     retailer: 'wiggle',
     image: decodeURI(image)
   };

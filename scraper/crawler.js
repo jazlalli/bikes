@@ -1,33 +1,43 @@
 var async = require('async'),
     request = require('request'),
-    retailers = require('./retailers');
+    retailers = require('./retailers'),
+    mongoose = require('mongoose'),
+    Target = require('../models/Target');
 
-module.exports = crawl;
+var endpoint = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/bikes';
+var db = mongoose.connection;
+mongoose.connect(endpoint);
 
-function crawl(target, callback) {
-  target = target || {};
+var products = [];
+var CONCURRENCY = 5;
 
-  var limit = 1;
-  var products = [];
-  var retailer = target.retailer;
-  var getLinks = retailers[retailer].getLinks;
+var q = async.queue(function (task, cb) {
+  console.log('crawling', task.url);
 
-  var q = async.queue(function (task, cb) {
-    request(task.url, function (err, res, body) {
-      if (!err) {
+  var retailer = task.retailer;
+  var _crawl = retailers[retailer].crawl;
 
-        getLinks(body, function (err, data) {
-          products = data;
-          cb();
-        });
-      }
-    });
-  }, limit);
+  request(task.url, function (err, res, body) {
+    if (!err) {
 
+      _crawl(body, function (err, data) {
+        products = products.concat(data);
+        cb();
+      });
+    }
+  });
+}, CONCURRENCY);
+
+function crawl(targets, callback) {
   q.drain = function() {
-    console.log('got', products.length, 'products from', target.retailer);
+    console.log('retrieved', products.length, 'products');
     callback(null, products);
+
+    mongoose.connection.close();
+    products = [];
   };
 
-  q.push(target);
+  targets.forEach(t => q.push(t));
 }
+
+module.exports = crawl;

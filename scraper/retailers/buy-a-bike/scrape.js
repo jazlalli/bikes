@@ -11,9 +11,9 @@ function scrape(responseBody, callback) {
       image = $('div.zoomie img').attr('src');
 
   var product = {
-    name: decodeURI(name.trim()),
+    name: name.trim(),
     price: '£' + price,
-    description: decodeURI(description),
+    description: description,
     retailer: 'buy-a-bike',
     image: decodeURI($(image).attr('src')) || ''
   };
