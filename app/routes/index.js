@@ -1,11 +1,12 @@
-function routeHandler(req, res, next) {
-  var content = React.renderToString(<Handler />, null);
-  var data = { bikes: result[0] };
-  // var html = inject(content, data);
-  res.end(html);
-}
+import React from 'react';
+import { Route, IndexRoute } from 'react-router';
 
-module.exports = function (router) {
-  router.route('/*').get(routeHandler);
-  return router;
-}
+import Home from '../components/Home';
+
+const routes = (
+  <Route>
+    <Route path="/" component={Home} />
+  </Route>
+);
+
+export { routes };
